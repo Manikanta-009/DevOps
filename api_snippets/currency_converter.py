@@ -1,61 +1,62 @@
 import os
 import requests
 
-# Feiklds require to fecth the Currency detsild
+# Fields required to fetch currency details
 API_KEY = os.getenv("CURRENCY_API")
 CURRENCY_URL = "https://api.freecurrencyapi.com/v1/latest"
 
+def convert_currency(amount, from_currency, to_currencies):
+    """
+    Convert an amount from one currency to multiple target currencies using FreeCurrencyAPI.
+    """
 
-def fetch_rates(base_currency, target_currencies):
+    from_currency = from_currency.strip().upper()
+
+    # Clean up input: remove spaces and convert currency codes to uppercase (e.g., INR, USD, GBP, EUR)
+    to_currencies = ','.join([c.strip().upper() for c in to_currencies.split(',')])
+
     params = {
         'apikey': API_KEY,
-        'base_currency': base_currency,
-        'currencies': ','.join(target_currencies)
+        'base_currency': from_currency,
+        'currencies': to_currencies
     }
+
+    print("\nRetrieving the latest exchange rates...\n")
+
     try:
-        
-        response = requests.get(CURRENCY_URL, params=params, timeout=5)
-        response.raise_for_status()
-        
-        data = response.json()
-        
-        rates = data.get('data')
+        resp = requests.get(CURRENCY_URL, params=params, timeout=5)
+        resp.raise_for_status()
+        data = resp.json()
+
+        rates = data.get('data', {})
         if not rates:
-            raise ValueError("No rates returned. Check currency codes.")
-        return rates
-    
-    except requests.exceptions.RequestException as exc:
-        print(f"ERROR: Request failed: {exc}")
-        raise
-    except Exception as exc:
-        print(f"ERROR: Unexpected error: {exc}")
-        raise
+            print("No data received. Please verify the currency codes and try again.")
+            return None
 
+        print("Exchange rates successfully retrieved.\n")
 
-def convert_amount(amount, rates):
-    return {cur: amount * rate for cur, rate in rates.items()}
+        print(f"Converting {amount} {from_currency} to: {to_currencies}\n")
 
+        for cur, rate in rates.items():
+            converted = amount * rate
+            print(f"{amount} {from_currency} = {converted:.2f} {cur}")
+
+        print("\nConversion completed.\n")
+
+    except requests.exceptions.Timeout:
+        print("Request timed out. Please check your internet connection and try again.")
+    except requests.exceptions.HTTPError as e:
+        print(f"HTTP Error: {e.response.status_code} - {e.response.reason}")
+    except requests.exceptions.ConnectionError:
+        print("Unable to connect to the currency API. Please check your network.")
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred during the request: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
-    base_currency = input("Base Currency (e.g. USD): ").strip().upper()
-    try:
-        amount = float(input("Amount: "))
-    except ValueError:
-        print("ERROR: Invalid amount entered.")
-        exit(1)
+    from_currency = input("Enter the base currency (e.g., USD): ")
+    amount = float(input("Enter the amount to convert: "))
+    to_currencies = input("Enter target currencies (comma separated, e.g., INR, EUR, GBP): ")
 
-    to_currencies = [currency.strip().upper() 
-                     for currency in input("Currencies to convert to (comma separated, e.g. INR,EUR,GBP): ").split(',') 
-                     if currency.strip()]
-
-    if not API_KEY:
-        print("ERROR: API key 'CURRENCY_API' is not available.")
-        exit(1)
-
-    try:
-        rates = fetch_rates(base_currency, to_currencies)
-        converted = convert_amount(amount, rates)
-        for currency, value in converted.items():
-            print(f"{amount} {base_currency} = {value:.2f} {currency}")
-    except Exception:
-        print("ERROR: Conversion failed.")
+    convert_currency(amount, from_currency, to_currencies)
