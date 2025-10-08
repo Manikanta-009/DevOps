@@ -47,15 +47,16 @@ def get_weather(city: str) -> None:
         print(f"Humidity:    {humidity}%")
         print(f"Wind Speed:  {wind_speed} m/s")
         print("-" * 25)
-
+    
     # Error handling: Specific cases for common API errors.
     except requests.exceptions.HTTPError as e:
-        if response.status_code == 401:
+        status_code = e.response.status_code if e.response else None
+        if status_code == 401:
             print("Invalid API key.")  # Most common setup mistake.
-        elif response.status_code == 404:
+        elif status_code == 404:
             print(f"City '{city}' not found.")  # User typo or invalid city.
         else:
-            print(f"HTTP error: {e}")
+            print(f"HTTP error occurred: {e}")
     except requests.exceptions.ConnectionError:
         print("Network error. Please check your connection.")  # Covers DNS, offline, etc.
     except Exception as e:
@@ -78,5 +79,3 @@ if __name__ == "__main__":
 
         choice = input("Wanna try with another city? (y/n): ").strip().lower()
         # Quick way to try another city without restarting.
-
-
