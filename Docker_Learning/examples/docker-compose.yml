@@ -1,0 +1,23 @@
+# Docker Compose — defines and runs multi-container applications
+# Start with:  docker compose up -d
+# Stop with:   docker compose down
+
+services:
+  # ============ Service: web ============
+  # Each service represents one container.
+  # Compose handles building, networking, and lifecycle for you.
+  web:
+    # Build the image using the Dockerfile in the current directory
+    build: .
+
+    # Map host port 8080 to container port 80
+    # Format: "host:container"
+    ports:
+      - "8080:80"
+
+    # Assign a predictable container name instead of a random one
+    container_name: docker-welcome
+
+    # Automatically restart the container unless explicitly stopped
+    # Options: no | always | on-failure | unless-stopped
+    restart: unless-stopped

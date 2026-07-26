@@ -417,7 +417,6 @@ docker network inspect mynetwork
 |---------|---------------|---------------|
 | DNS resolution | No (use --link, deprecated) | Yes (automatic by container name) |
 | Isolation | All containers on same default bridge | Only containers on same custom network |
-| Connect/disconnect live | No | Yes |
 
 ```bash
 # Connect a running container to another network
@@ -532,8 +531,6 @@ secrets:     # Sensitive data
 ### Full Example
 
 ```yaml
-version: "3.9"
-
 services:
   # Web application
   web:

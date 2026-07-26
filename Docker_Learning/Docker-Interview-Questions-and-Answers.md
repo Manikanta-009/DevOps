@@ -300,7 +300,7 @@ docker run --log-driver=awslogs --log-opt awslogs-group=myapp myapp
 | Feature | Docker Swarm | Kubernetes |
 |---------|-------------|------------|
 | Complexity | Simple, easy setup | Complex, steep learning curve |
-| Scaling | Basic auto-scaling | Advanced auto-scaling (HPA, VPA) |
+| Scaling | Manual scaling only | Advanced auto-scaling (HPA, VPA) |
 | Networking | Built-in overlay | CNI plugins (Calico, Flannel, etc.) |
 | Load balancing | Built-in | Ingress controllers |
 | Community | Smaller | Very large, industry standard |
