@@ -75,9 +75,9 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .logo-ring {
-      width: 140px;
-      height: 140px;
+    .logo-wrap {
+      width: 120px;
+      height: 120px;
       margin: 0 auto 2.5rem;
       position: relative;
       display: flex;
@@ -85,57 +85,79 @@
       justify-content: center;
     }
 
-    .logo-ring::before {
+    .logo-wrap::before {
       content: '';
       position: absolute;
-      inset: 0;
+      inset: -6px;
       border-radius: 50%;
-      border: 2px solid transparent;
-      background: linear-gradient(135deg, var(--blue-400), var(--blue-600), var(--blue-400)) border-box;
-      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      animation: spin 8s linear infinite;
+      background: conic-gradient(
+        from 0deg,
+        transparent,
+        var(--blue-400),
+        var(--blue-600),
+        var(--blue-400),
+        transparent
+      );
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 1px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 1px));
+      animation: spin 6s linear infinite;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
 
-    .logo-ring::after {
+    .logo-wrap::after {
       content: '';
       position: absolute;
-      inset: -8px;
+      inset: -10px;
       border-radius: 50%;
-      background: radial-gradient(circle, color-mix(in srgb, var(--blue-400) 15%, transparent) 0%, transparent 70%);
-      animation: pulseGlow 3s ease-in-out infinite;
+      background: radial-gradient(circle, color-mix(in srgb, var(--blue-400) 12%, transparent) 0%, transparent 70%);
+      animation: breathe 3s ease-in-out infinite;
     }
 
-    @keyframes pulseGlow {
-      0%, 100% { transform: scale(1); opacity: 0.6; }
-      50% { transform: scale(1.1); opacity: 1; }
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.15); opacity: 1; }
     }
 
     .logo {
-      width: 100px;
-      height: 100px;
-      background: linear-gradient(135deg, var(--blue-400), var(--blue-600));
-      border-radius: 24px;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.8rem;
-      font-weight: 800;
-      color: var(--white);
       position: relative;
       z-index: 1;
-      box-shadow: 0 8px 40px color-mix(in srgb, var(--blue-400) 30%, transparent);
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      padding: 14px;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
     }
 
     .logo:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 12px 50px color-mix(in srgb, var(--blue-400) 45%, transparent);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .logo:hover img {
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
     }
 
     h1 {
@@ -379,8 +401,8 @@
     }
 
     @media (max-width: 520px) {
-      .logo-ring { width: 100px; height: 100px; margin-bottom: 2rem; }
-      .logo { width: 70px; height: 70px; font-size: 2rem; }
+      .logo-wrap { width: 90px; height: 90px; margin-bottom: 2rem; }
+      .logo { width: 66px; height: 66px; padding: 10px; }
       .card { padding: 1.25rem; }
       .cmd { font-size: 0.7rem; padding: 0.6rem 0.8rem; }
       .link-row { flex-direction: column; align-items: flex-start; }
@@ -389,8 +411,8 @@
     @media (max-width: 380px) {
       .cmd { font-size: 0.6rem; padding: 0.5rem 0.6rem; overflow-x: auto; white-space: nowrap; }
       .cmd-text { flex-shrink: 0; }
-      .logo-ring { width: 80px; height: 80px; margin-bottom: 1.5rem; }
-      .logo { width: 56px; height: 56px; font-size: 1.5rem; border-radius: 16px; }
+      .logo-wrap { width: 72px; height: 72px; margin-bottom: 1.5rem; }
+      .logo { width: 52px; height: 52px; padding: 8px; }
     }
   </style>
 </head>
@@ -410,8 +432,8 @@
   <div class="decoration decoration-3" aria-hidden="true">:latest</div>
 
   <div class="container">
-    <div class="logo-ring">
-      <div class="logo">D</div>
+    <div class="logo-wrap">
+      <div class="logo"><img src="../images/docker-icon.png" alt="Docker"></div>
     </div>
 
     <h1>Hello from <span>Docker</span></h1>
@@ -426,7 +448,7 @@
       <div class="cmd-group">
         <div class="cmd">
           <span class="cmd-prompt">$</span>
-          <span class="cmd-text">docker build -t docker-welcome .</span>
+          <span class="cmd-text">docker build -t docker-welcome -f Docker_Learning/examples/Dockerfile .</span>
           <button class="cmd-copy" title="Copy" aria-label="Copy command">&#x2398;</button>
         </div>
         <div class="cmd">

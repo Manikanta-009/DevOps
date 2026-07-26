@@ -1,14 +1,19 @@
 # Docker Compose — defines and runs multi-container applications
-# Start with:  docker compose up -d
+# Start with:  docker compose up -d       (run from examples/)
 # Stop with:   docker compose down
+# The build context is set to the repo root so the Dockerfile
+# can access the shared images/ directory.
 
 services:
   # ============ Service: web ============
   # Each service represents one container.
   # Compose handles building, networking, and lifecycle for you.
   web:
-    # Build the image using the Dockerfile in the current directory
-    build: .
+    # Build the image using the Dockerfile from the repo root
+    # Context is set to the parent so the Dockerfile can access images/
+    build:
+      context: ../
+      dockerfile: examples/Dockerfile
 
     # Map host port 8080 to container port 80
     # Format: "host:container"
