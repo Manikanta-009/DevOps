@@ -10,12 +10,10 @@ LABEL org.opencontainers.image.version="1.0.0"
 # ============ Copy Assets ============
 # Copy the HTML file into nginx's default document root
 # Nginx automatically serves index.html when a directory is requested
-# Note: build from the repo root (not examples/):
-#   docker build -t docker-welcome -f Docker_Learning/examples/Dockerfile .
-COPY Docker_Learning/examples/index.html /usr/share/nginx/html/index.html
+COPY index.html /usr/share/nginx/html/index.html
 # Copy the Docker icon image one level up from the web root
 # The HTML references it as ../images/docker-icon.png
-COPY Docker_Learning/images/docker-icon.png /usr/share/nginx/images/docker-icon.png
+COPY docker-icon.png /usr/share/nginx/html/docker-icon.png
 
 # ============ Port ============
 # Document the port the container listens on (informational only)
